@@ -178,13 +178,14 @@ func resolveAsset(manifest *Manifest, variant, key string) (string, bool) {
 	}
 
 	variantAssets := manifest.Variants[variant].Assets
-	prefix := strings.TrimSuffix(activePrefix(manifest.Assets.Prefix, variantAssets.Prefix), "/")
 
 	if pathOverride, ok := variantAssets.Files[key]; ok && pathOverride != "" {
+		prefix := strings.TrimSuffix(activePrefix(manifest.Assets.Prefix, variantAssets.Prefix), "/")
 		return joinPath(prefix, pathOverride), true
 	}
 
 	if basePath, ok := manifest.Assets.Files[key]; ok && basePath != "" {
+		prefix := strings.TrimSuffix(manifest.Assets.Prefix, "/")
 		return joinPath(prefix, basePath), true
 	}
 
