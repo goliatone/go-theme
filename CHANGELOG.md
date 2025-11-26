@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.2.0](https://github.com/goliatone/go-theme/compare/v0.1.0...v0.2.0) - (2025-11-26)
+
+## <!-- 13 -->📦 Bumps
+
+- Bump version: v0.2.0 ([a808bb7](https://github.com/goliatone/go-theme/commit/a808bb79b65409f966ffc41ce778c4b8e052ea2f))  - (goliatone)
+
+## <!-- 3 -->📚 Documentation
+
+- Update changelog for v0.1.0 ([ceec5b9](https://github.com/goliatone/go-theme/commit/ceec5b9765c9f54a8c0adeb5cd34039293b37ae8))  - (goliatone)
+
+## <!-- 7 -->⚙️ Miscellaneous Tasks
+
+- Update readme ([4f9d080](https://github.com/goliatone/go-theme/commit/4f9d0805e9e3a584b1eb2e20303d60dc2fad2057))  - (goliatone)
+
 # [0.1.0](https://github.com/goliatone/go-theme/tree/v0.1.0) - (2025-11-26)
 
 ## <!-- 13 -->📦 Bumps
