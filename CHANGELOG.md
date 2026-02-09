@@ -1,5 +1,17 @@
 # Changelog
 
+# Unreleased
+
+## Added
+
+- Exported `Selection.Snapshot()` and `ResolvedSelection` to return a complete resolved selection payload (theme, variant, merged tokens, merged assets, merged templates, resolved asset prefix).
+- Added external package compile coverage for the resolved snapshot API in `selector_external_test.go`.
+
+## Changed
+
+- Documented deterministic snapshot merge semantics for tokens/templates/assets and prefix resolution.
+- Added snapshot-focused tests for asset/template precedence and prefix fallback behavior.
+
 # [0.2.0](https://github.com/goliatone/go-theme/compare/v0.1.0...v0.2.0) - (2025-11-26)
 
 ## <!-- 13 -->📦 Bumps
@@ -38,5 +50,4 @@
 - Update deps ([fb01ef6](https://github.com/goliatone/go-theme/commit/fb01ef6dce18809d999eadd09a2d92c528183e50))  - (goliatone)
 - Update tests ([b95ab05](https://github.com/goliatone/go-theme/commit/b95ab05936b5a7177603b799812488a4249399e8))  - (goliatone)
 - Initial commit ([1b8c780](https://github.com/goliatone/go-theme/commit/1b8c780880787871ad5bc62586324c6129cbfad7))  - (goliatone)
-
 
