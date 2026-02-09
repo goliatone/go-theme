@@ -42,6 +42,16 @@ type Selection struct {
 	Manifest *Manifest
 }
 
+// ResolvedSelection is a complete theme snapshot with merged variant/base values.
+type ResolvedSelection struct {
+	Theme       string
+	Variant     string
+	Tokens      map[string]string
+	Assets      map[string]string
+	Templates   map[string]string
+	AssetPrefix string
+}
+
 // RendererConfig bundles resolved partials, tokens, CSS vars, and an asset resolver for renderers.
 type RendererConfig struct {
 	Theme    string
@@ -133,6 +143,18 @@ func (s Selection) RendererTheme(fallbacks map[string]string) RendererConfig {
 	}
 }
 
+// Snapshot returns a fully resolved selection payload for integrations that need merged assets/templates/tokens.
+func (s Selection) Snapshot() ResolvedSelection {
+	return ResolvedSelection{
+		Theme:       s.Theme,
+		Variant:     s.Variant,
+		Tokens:      s.Tokens(),
+		Assets:      resolveAssets(s.Manifest, s.Variant),
+		Templates:   resolveTemplates(s.Manifest, s.Variant),
+		AssetPrefix: resolveAssetPrefix(s.Manifest, s.Variant),
+	}
+}
+
 // resolveTemplate finds the template path for a key, preferring variant overrides then base templates, falling back to the provided default.
 func resolveTemplate(manifest *Manifest, variant, key, fallback string) string {
 	if manifest == nil {
@@ -190,6 +212,71 @@ func resolveAsset(manifest *Manifest, variant, key string) (string, bool) {
 	}
 
 	return "", false
+}
+
+func resolveTemplates(manifest *Manifest, variant string) map[string]string {
+	templates := map[string]string{}
+	if manifest == nil {
+		return templates
+	}
+
+	keys := map[string]struct{}{}
+	for key := range manifest.Templates {
+		keys[key] = struct{}{}
+	}
+	if variant != "" {
+		if v, ok := manifest.Variants[variant]; ok {
+			for key := range v.Templates {
+				keys[key] = struct{}{}
+			}
+		}
+	}
+
+	for key := range keys {
+		fallback := manifest.Templates[key]
+		if tpl := resolveTemplate(manifest, variant, key, fallback); tpl != "" {
+			templates[key] = tpl
+		}
+	}
+	return templates
+}
+
+func resolveAssets(manifest *Manifest, variant string) map[string]string {
+	assets := map[string]string{}
+	if manifest == nil {
+		return assets
+	}
+
+	keys := map[string]struct{}{}
+	for key := range manifest.Assets.Files {
+		keys[key] = struct{}{}
+	}
+	if variant != "" {
+		if v, ok := manifest.Variants[variant]; ok {
+			for key := range v.Assets.Files {
+				keys[key] = struct{}{}
+			}
+		}
+	}
+
+	for key := range keys {
+		if resolved, ok := resolveAsset(manifest, variant, key); ok && resolved != "" {
+			assets[key] = resolved
+		}
+	}
+	return assets
+}
+
+func resolveAssetPrefix(manifest *Manifest, variant string) string {
+	if manifest == nil {
+		return ""
+	}
+	if variant != "" {
+		if v, ok := manifest.Variants[variant]; ok {
+			return activePrefix(manifest.Assets.Prefix, v.Assets.Prefix)
+		}
+	}
+	return manifest.Assets.Prefix
 }
 
 func activePrefix(base, override string) string {
